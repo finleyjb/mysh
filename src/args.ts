@@ -1,4 +1,4 @@
-import { parseArgs } from "./deps.ts";
+import { parseArgs } from "jsr:@std/cli/parse-args";
 
 let flags = undefined;
 

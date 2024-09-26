@@ -13,7 +13,15 @@ if (import.meta.main) {
     const childProc = new Deno.Command(commandParts[0], {
       args: commandParts.slice(1),
     });
-    const { stdout } = await childProc.output();
+    try {
+      const { stdout } = await childProc.output();
+    } catch (err) {
+      verbose(err);
+      if (err.name === "ENOENT") {
+        console.log(`mysh: command not found: ${commandParts[0]}`);
+        continue;
+      }
+    }
     console.log(new TextDecoder().decode(stdout));
   }
 }
