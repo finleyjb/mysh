@@ -13,14 +13,17 @@ if (import.meta.main) {
     const childProc = new Deno.Command(commandParts[0], {
       args: commandParts.slice(1),
     });
+    let stdout: Uint8Array | undefined;
     try {
-      const { stdout } = await childProc.output();
+      ({ stdout } = await childProc.output());
     } catch (err) {
       verbose(err);
-      if (err.name === "ENOENT") {
-        console.log(`mysh: command not found: ${commandParts[0]}`);
-        continue;
+      if (err.code === "ENOENT") {
+        console.error(`mysh: command not found: ${commandParts[0]}`);
       }
+    }
+    if (!stdout) {
+      continue;
     }
     console.log(new TextDecoder().decode(stdout));
   }
