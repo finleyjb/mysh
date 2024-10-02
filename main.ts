@@ -1,4 +1,5 @@
 import { verbose } from "./src/log.ts";
+import { lex } from "./src/parse.ts";
 
 if (import.meta.main) {
   while (true) {
@@ -8,7 +9,7 @@ if (import.meta.main) {
       verbose("Empty input, exiting");
       Deno.exit(0);
     }
-    const commandParts = command.split(/\s/);
+    const commandParts = lex(command);
 
     const childProc = new Deno.Command(commandParts[0], {
       args: commandParts.slice(1),
