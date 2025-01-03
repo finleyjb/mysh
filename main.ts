@@ -15,10 +15,10 @@ if (import.meta.main) {
       verbose("Empty input");
       continue;
     }
-    const commandParts = lex(command);
+    const lexedCommand = lex(command);
 
-    const childProc = new Deno.Command(commandParts[0], {
-      args: commandParts.slice(1),
+    const childProc = new Deno.Command(lexedCommand.command, {
+      args: lexedCommand.commandParts,
     });
 
     let stdout: Uint8Array | undefined;
