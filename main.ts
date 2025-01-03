@@ -20,6 +20,7 @@ if (import.meta.main) {
     const childProc = new Deno.Command(commandParts[0], {
       args: commandParts.slice(1),
     });
+
     let stdout: Uint8Array | undefined;
     try {
       ({ stdout } = await childProc.output());
@@ -29,9 +30,11 @@ if (import.meta.main) {
         console.error(`mysh: command not found: ${commandParts[0]}`);
       }
     }
+
     if (!stdout) {
       continue;
     }
+
     await Deno.stdout.write(stdout);
   }
 }
