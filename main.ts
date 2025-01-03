@@ -1,26 +1,19 @@
+import { Input } from "@cliffy/prompt";
+
 import { verbose } from "./src/log.ts";
 import { lex } from "./src/parse.ts";
-import * as readline from "node:readline/promises";
-import process from "node:process";
-
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-rl.addListener("SIGINT", () => {
-  console.log("\ninterrupted!\n");
-});
 
 if (import.meta.main) {
   while (true) {
-    const command = await rl.question(`${Deno.cwd()}$ `);
-    console.log(command);
-    // This promise weirdness is necessary because prompting in a loop would
-    // otherwise prevent handling SIGTERM
+    const command = await Input.prompt({
+      message: Deno.cwd(),
+      pointer: "$",
+      prefix: "",
+    });
+
     if (!command) {
-      verbose("Empty input, exiting");
-      break;
+      verbose("Empty input");
+      continue;
     }
     const commandParts = lex(command);
 
@@ -39,6 +32,6 @@ if (import.meta.main) {
     if (!stdout) {
       continue;
     }
-    console.log(new TextDecoder().decode(stdout));
+    await Deno.stdout.write(stdout);
   }
 }
